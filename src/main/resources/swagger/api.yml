@@ -1,17 +1,162 @@
 # API-first development with OpenAPI
 # This file will be used at compile time to generate Spring-MVC endpoint stubs using openapi-generator
-openapi: '3.0.1'
+#openapi: '3.0.1'
+#info:
+#  title: 'ContainerScheduler'
+#  version: 0.0.1
+#paths: {}
+#
+#components:
+#  securitySchemes:
+#    jwt:
+#      type: http
+#      description: JWT Authentication
+#      scheme: bearer
+#      bearerFormat: JWT
+#security:
+#  - jwt: []
+openapi: '3.0.0'
+
 info:
-  title: 'ContainerScheduler'
-  version: 0.0.1
-paths: {}
+  version: '1.0.0'
+  title: ContainerScheduler API
+
+paths:
+  /container/schedule:
+    post:
+      operationId: api.schedule
+      summary: schedules a container
+      description: |
+        select an appropriate node to host the container
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Container'
+        description: Container to schedule
+      responses:
+        '200':
+          description: container is scheduled to a node
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Container'
+        '400':
+          description: bad input parameter
+        '404':
+          description: no node could be found to schedule to container too
+  /container/{containerId}:
+    delete:
+      operationId: api.delete_container
+      summary: deletes a container
+      description: |
+        deletes a container
+      parameters:
+        - in: path
+          name: containerId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID of the container to delete
+      responses:
+        '204':
+          description: container is deleted
+        '404':
+          description: no node could be found to schedule to container too
+  /nodes:
+    get:
+      operationId: api.get_nodes
+      summary: get all nodes
+      description: |
+        Get all nodes
+      responses:
+        '200':
+          description: All nodes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Node'
+  /nodes/{nodeId}:
+    get:
+      operationId: api.get_node
+      summary: get single node
+      description: |
+        Get single node
+      parameters:
+        - in: path
+          name: nodeId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID of the node to get
+      responses:
+        '200':
+          description: A Node
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+        '404':
+          description: no node could be found with the specified ID
 
 components:
-  securitySchemes:
-    jwt:
-      type: http
-      description: JWT Authentication
-      scheme: bearer
-      bearerFormat: JWT
-security:
-  - jwt: []
+  schemas:
+    Container:
+      type: object
+      required:
+        - id
+        - name
+        - image
+        - scheduler-hints
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: my-super-container
+        image:
+          description: 'The name of the image to use when creating the container'
+          type: string
+        status:
+          type: string
+          enum: [pending, scheduled, running]
+        scheduler-hints:
+          type: object
+          additionalProperties:
+            type: string
+          example: { 'flavour': 'gold', 'os': 'Linux', 'CPU': 'AMD' }
+    Node:
+      type: object
+      required:
+        - id
+        - name
+        - scheduler-hints
+        - capacity
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: my-super-node
+        capacity:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 10
+            used:
+              type: integer
+              example: 4
+        scheduler-hints:
+          type: object
+          additionalProperties:
+            type: string
+          example: { 'flavour': 'silver', 'os': 'Windows', 'CPU': 'Intel' }
