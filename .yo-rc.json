@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "ie.benjamin.container.scheduler"
+    },
+    "jhipsterVersion": "6.0.1",
+    "applicationType": "monolith",
+    "baseName": "ContainerScheduler",
+    "packageName": "ie.benjamin.container.scheduler",
+    "packageFolder": "ie/benjamin/container/scheduler",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "mssql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": true,
+    "jwtSecretKey": "MjU4ODczYWMyOGU0M2ZkNzYxM2VhMTNiOWYyMWZkZDE2ODZjZTk2NzViODgxNDA2Y2VhNjk3OThlN2I5YzA4OWY3NWIzOGExNTI3MTg5NjM5N2E5NThlNGE4OWQwYzU3MzE1MGRiNzFlNTA3YzZmNjkzMTlhZGFlZDBlMzc2ZjY=",
+    "clientFramework": "angularX",
+    "clientTheme": "spacelab",
+    "clientThemeVariant": "dark",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "testFrameworks": ["gatling"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false
+  }
+}
