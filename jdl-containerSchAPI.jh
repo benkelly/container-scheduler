@@ -1,0 +1,30 @@
+
+entity Node {
+   id Uuid required,
+   name String required,
+   totalCapacity Integer,
+   usedCapacity Integer,
+    flavour String,
+    os String,
+    cpu String,
+}
+
+entity Container {
+   id Uuid required,
+   name String required,
+    image String,
+    status String,
+    flavour String,
+    os String,
+    cpu String,
+}
+
+
+relationship ManyToOne {
+   Container{node(name)} to Node
+}
+
+
+dto * with mapstruct
+service * with serviceClass
+paginate Node, Container with infinite-scroll
