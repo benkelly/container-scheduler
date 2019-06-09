@@ -8,7 +8,8 @@ import java.util.Optional;
 
 @Controller
 //@RequestMapping("${openapi.container-scheduler.base-path:}")
-@RequestMapping("/api")
+//@RequestMapping("/api")
+@RequestMapping("/")
 public class NodesApiController implements NodesApi {
 
 //    @Autowired
