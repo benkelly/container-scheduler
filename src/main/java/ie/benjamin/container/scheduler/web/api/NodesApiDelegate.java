@@ -1,8 +1,10 @@
 package ie.benjamin.container.scheduler.web.api;
 
+import ie.benjamin.container.scheduler.service.NodeService;
 import ie.benjamin.container.scheduler.web.api.model.Node;
 import java.util.UUID;
 import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 @Service
 public interface NodesApiDelegate {
+
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();

@@ -1,6 +1,6 @@
 
 entity Node {
-   id Uuid required,
+   nodeId String required unique,
    name String required,
    totalCapacity Integer,
    usedCapacity Integer,
@@ -10,7 +10,7 @@ entity Node {
 }
 
 entity Container {
-   id Uuid required,
+   containerId String required unique,
    name String required,
     image String,
     status String,

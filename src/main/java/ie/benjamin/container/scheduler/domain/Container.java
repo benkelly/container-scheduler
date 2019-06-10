@@ -24,6 +24,10 @@ public class Container implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(name = "container_id", nullable = false, unique = true)
+    private String containerId;
+
+    @NotNull
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -53,6 +57,19 @@ public class Container implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getContainerId() {
+        return containerId;
+    }
+
+    public Container containerId(String containerId) {
+        this.containerId = containerId;
+        return this;
+    }
+
+    public void setContainerId(String containerId) {
+        this.containerId = containerId;
     }
 
     public String getName() {
@@ -167,6 +184,7 @@ public class Container implements Serializable {
     public String toString() {
         return "Container{" +
             "id=" + getId() +
+            ", containerId='" + getContainerId() + "'" +
             ", name='" + getName() + "'" +
             ", image='" + getImage() + "'" +
             ", status='" + getStatus() + "'" +

@@ -23,6 +23,10 @@ public class Node implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(name = "node_id", nullable = false, unique = true)
+    private String nodeId;
+
+    @NotNull
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -48,6 +52,19 @@ public class Node implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public Node nodeId(String nodeId) {
+        this.nodeId = nodeId;
+        return this;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
     }
 
     public String getName() {
@@ -149,6 +166,7 @@ public class Node implements Serializable {
     public String toString() {
         return "Node{" +
             "id=" + getId() +
+            ", nodeId='" + getNodeId() + "'" +
             ", name='" + getName() + "'" +
             ", totalCapacity=" + getTotalCapacity() +
             ", usedCapacity=" + getUsedCapacity() +

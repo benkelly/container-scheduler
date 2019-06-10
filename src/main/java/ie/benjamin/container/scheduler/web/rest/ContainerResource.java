@@ -1,17 +1,27 @@
 package ie.benjamin.container.scheduler.web.rest;
 
 import ie.benjamin.container.scheduler.service.ContainerService;
+import ie.benjamin.container.scheduler.service.NodeService;
+import ie.benjamin.container.scheduler.service.dto.NodeDTO;
+import ie.benjamin.container.scheduler.web.api.model.Container;
 import ie.benjamin.container.scheduler.web.rest.errors.BadRequestAlertException;
 import ie.benjamin.container.scheduler.service.dto.ContainerDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
@@ -41,6 +51,9 @@ public class ContainerResource {
     private String applicationName;
 
     private final ContainerService containerService;
+
+    @Autowired
+    private NodeService nodeService;
 
     public ContainerResource(ContainerService containerService) {
         this.containerService = containerService;
@@ -125,4 +138,81 @@ public class ContainerResource {
         containerService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
+
+
+    @ApiOperation(value = "schedules a container", nickname = "apiSchedule", notes = "select an appropriate node to host the container ", response = Container.class, tags = {})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "container is scheduled to a node", response = Container.class),
+        @ApiResponse(code = 400, message = "bad input parameter"),
+        @ApiResponse(code = 404, message = "no node could be found to schedule to container too")})
+    @RequestMapping(value = "/container/schedule",
+        produces = {"application/json"},
+        consumes = {"application/json"},
+        method = RequestMethod.POST)
+    public ResponseEntity<String> apiSchedule(@ApiParam(value = "Container to schedule") @Valid @RequestBody Container container) {
+
+        if (container != null) {
+            log.debug("REST request to apiSchedule Container : {}", container);
+            ContainerDTO containerDTO = convertToContainerDTO(container);
+            log.debug("containerDTO : {}", containerDTO);
+
+
+            Page<NodeDTO> nodeList = nodeService.findAll(new PageRequest(
+                0,
+                Integer.MAX_VALUE,
+                Sort.Direction.ASC, "id"));
+
+
+            NodeDTO bestNode = null;
+            for (NodeDTO nodeDTO : nodeList) {
+                if (nodeDTO.getCpu().equalsIgnoreCase(containerDTO.getCpu()) &&
+                    nodeDTO.getFlavour().equalsIgnoreCase(containerDTO.getFlavour()) &&
+                    nodeDTO.getOs().equalsIgnoreCase(containerDTO.getOs())) {
+
+                    if (bestNode == null) {
+                        if (nodeDTO.getTotalCapacity() - nodeDTO.getUsedCapacity() > 0) {
+                            bestNode = nodeDTO;
+                        }
+                    }
+
+                    if (bestNode != null) {
+                        if (bestNode.getTotalCapacity() - bestNode.getUsedCapacity() >
+                            nodeDTO.getTotalCapacity() - nodeDTO.getUsedCapacity()) {
+                            if (nodeDTO.getTotalCapacity() - nodeDTO.getUsedCapacity() > 0) {
+                                bestNode = nodeDTO;
+                            }
+                        }
+                    }
+                }
+            }
+            if (bestNode != null) {
+                containerDTO.setNodeId(bestNode.getId());
+                containerDTO.setNodeName(bestNode.getName());
+                containerService.save(containerDTO);
+                bestNode.setUsedCapacity(bestNode.getUsedCapacity()+1);
+                nodeService.save(bestNode);
+                return apiSchedule(container);
+            }
+            return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("No similar Nodes for container");
+        }
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("No validcontainer");
+    }
+
+    private ContainerDTO convertToContainerDTO(@RequestBody @ApiParam("Container to schedule") @Valid Container container) {
+        ContainerDTO containerDTO = new ContainerDTO();
+        containerDTO.setContainerId(String.valueOf(container.getId()));
+        containerDTO.setId((long) container.getId().hashCode());
+        containerDTO.setName(container.getName());
+        containerDTO.setCpu(container.getSchedulerHints().get("CPU"));
+        containerDTO.setFlavour(container.getSchedulerHints().get("flavour"));
+        containerDTO.setOs(container.getSchedulerHints().get("os"));
+        containerDTO.setImage(container.getImage());
+        return containerDTO;
+    }
+
+
 }
