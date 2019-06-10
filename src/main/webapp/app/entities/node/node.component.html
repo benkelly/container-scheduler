@@ -1,0 +1,66 @@
+<div>
+    <h2 id="page-heading">
+        <span>Nodes</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-node" [routerLink]="['/node/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Node
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="nodes">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="nodeId"><span>Node Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="totalCapacity"><span>Total Capacity</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="usedCapacity"><span>Used Capacity</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="flavour"><span>Flavour</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="os"><span>Os</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="cpu"><span>Cpu</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let node of nodes ;trackBy: trackId">
+                <td><a [routerLink]="['/node', node.id, 'view' ]">{{node.id}}</a></td>
+                <td>{{node.nodeId}}</td>
+                <td>{{node.name}}</td>
+                <td>{{node.totalCapacity}}</td>
+                <td>{{node.usedCapacity}}</td>
+                <td>{{node.flavour}}</td>
+                <td>{{node.os}}</td>
+                <td>{{node.cpu}}</td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/node', node.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/node', node.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'node', { outlets: { popup: node.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

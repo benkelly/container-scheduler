@@ -135,6 +135,22 @@ public class ContainerResource {
     @DeleteMapping("/containers/{id}")
     public ResponseEntity<Void> deleteContainer(@PathVariable Long id) {
         log.debug("REST request to delete Container : {}", id);
+        Optional<ContainerDTO> containerDTO = containerService.findOne(id);
+        if(containerDTO.isPresent()) {
+            ContainerDTO existingContainer = containerDTO.get();
+            Long nodeId = existingContainer.getNodeId();
+            Optional<NodeDTO> nodeDTO = nodeService.findOne(nodeId);
+
+            if(nodeDTO.isPresent()) {
+                NodeDTO existingNode = nodeDTO.get();
+                existingNode.setUsedCapacity(existingNode.getUsedCapacity() - 1);
+                nodeService.save(existingNode);
+            } else {
+                log.debug("there is no Node in the db with 'id'");
+            }
+        } else {
+            log.debug("there is no Container in the db with 'id'");
+        }
         containerService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
@@ -149,7 +165,7 @@ public class ContainerResource {
         produces = {"application/json"},
         consumes = {"application/json"},
         method = RequestMethod.POST)
-    public ResponseEntity<String> apiSchedule(@ApiParam(value = "Container to schedule") @Valid @RequestBody Container container) {
+    public ResponseEntity<ContainerDTO> apiSchedule(@ApiParam(value = "Container to schedule") @Valid @RequestBody Container container) throws URISyntaxException {
 
         if (container != null) {
             log.debug("REST request to apiSchedule Container : {}", container);
@@ -191,15 +207,18 @@ public class ContainerResource {
                 containerService.save(containerDTO);
                 bestNode.setUsedCapacity(bestNode.getUsedCapacity()+1);
                 nodeService.save(bestNode);
-                return apiSchedule(container);
+                return ResponseEntity.created(new URI("/api/containers/" + containerDTO.getId()))
+                    .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, containerDTO.getId().toString()))
+                    .body(containerDTO);
             }
-            return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body("No similar Nodes for container");
+            return ResponseEntity.created(new URI("/api/containers/" + containerDTO.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, containerDTO.getId().toString()))
+                .body(containerDTO);
         }
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body("No validcontainer");
+
+        return ResponseEntity.created(null)
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, null))
+            .body(null);
     }
 
     private ContainerDTO convertToContainerDTO(@RequestBody @ApiParam("Container to schedule") @Valid Container container) {
@@ -213,6 +232,4 @@ public class ContainerResource {
         containerDTO.setImage(container.getImage());
         return containerDTO;
     }
-
-
 }

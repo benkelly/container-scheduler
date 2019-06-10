@@ -1,0 +1,50 @@
+{
+    "name": "Node",
+    "fields": [
+        {
+            "fieldName": "nodeId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "unique"
+            ]
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "totalCapacity",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "usedCapacity",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "flavour",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "os",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "cpu",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190609161902",
+    "entityTableName": "node",
+    "dto": "mapstruct",
+    "pagination": "infinite-scroll",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,51 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="node">
+            <h2><span>Node</span> {{node.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Node Id</span></dt>
+                <dd>
+                    <span>{{node.nodeId}}</span>
+                </dd>
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{node.name}}</span>
+                </dd>
+                <dt><span>Total Capacity</span></dt>
+                <dd>
+                    <span>{{node.totalCapacity}}</span>
+                </dd>
+                <dt><span>Used Capacity</span></dt>
+                <dd>
+                    <span>{{node.usedCapacity}}</span>
+                </dd>
+                <dt><span>Flavour</span></dt>
+                <dd>
+                    <span>{{node.flavour}}</span>
+                </dd>
+                <dt><span>Os</span></dt>
+                <dd>
+                    <span>{{node.os}}</span>
+                </dd>
+                <dt><span>Cpu</span></dt>
+                <dd>
+                    <span>{{node.cpu}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/node', node.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
