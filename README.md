@@ -1,5 +1,14 @@
 # ContainerScheduler
 
+A simple container orchestrator API made quickly with Jhipster.
+
+
+[Sample Live version](http://containerscheduler.northeurope.azurecontainer.io:8080/)
+
+
+
+## Jhipster ReadMe
+
 This application was generated using JHipster 6.0.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.0.1](https://www.jhipster.tech/documentation-archive/v6.0.1).
 
 ## Development
