@@ -1,11 +1,10 @@
 # ContainerScheduler
 
+[![Build Status](https://travis-ci.org/benkelly/container-scheduler.svg?branch=master)](https://travis-ci.org/benkelly/container-scheduler)
+
 A simple container orchestrator API made quickly with Jhipster.
 
-
 [Sample Live version](http://containerscheduler.northeurope.azurecontainer.io:8080/)
-
-
 
 ## Jhipster ReadMe
 
