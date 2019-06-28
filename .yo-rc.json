@@ -21,7 +21,7 @@
     "serviceDiscoveryType": "eureka",
     "buildTool": "maven",
     "enableSwaggerCodegen": true,
-    "jwtSecretKey": "MjU4ODczYWMyOGU0M2ZkNzYxM2VhMTNiOWYyMWZkZDE2ODZjZTk2NzViODgxNDA2Y2VhNjk3OThlN2I5YzA4OWY3NWIzOGExNTI3MTg5NjM5N2E5NThlNGE4OWQwYzU3MzE1MGRiNzFlNTA3YzZmNjkzMTlhZGFlZDBlMzc2ZjY=",
+    "jwtSecretKey": "MjU4ODczYWvMyOGU0M2ZkNzYxM2VhMTNiOWYyMWZkZDE2ODZjZTk2NzViODgxNDA2Y2VhNjk3OThlN2I5YzA4OWY3NWIzOGExNTI3MTg5NjM5N2E5NThlNGE4OWQwYzU3MzE1MGRiNzFlNTA3YzZmNjkzMTlhZGFlZDBlMzc2ZjY=",
     "clientFramework": "angularX",
     "clientTheme": "spacelab",
     "clientThemeVariant": "dark",
